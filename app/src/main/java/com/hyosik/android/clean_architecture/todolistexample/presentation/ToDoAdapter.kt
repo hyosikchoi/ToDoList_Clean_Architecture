@@ -13,7 +13,7 @@ import com.hyosik.android.clean_architecture.todolistexample.databinding.Viewhol
 
 class ToDoAdapter : ListAdapter<ToDoEntity , ToDoAdapter.ToDoItemViewHolder>(diffUtil) {
 
-    private var toDoList: List<ToDoEntity> = listOf()
+
     private lateinit var toDoItemClickListener: (ToDoEntity) -> Unit
     private lateinit var toDoCheckListener: (ToDoEntity) -> Unit
 
@@ -61,19 +61,18 @@ class ToDoAdapter : ListAdapter<ToDoEntity , ToDoAdapter.ToDoItemViewHolder>(dif
     }
 
     override fun onBindViewHolder(holder: ToDoItemViewHolder, position: Int) {
-        holder.bindData(toDoList[position])
-        holder.bindViews(toDoList[position])
+        holder.bindData(currentList[position])
+        holder.bindViews(currentList[position])
     }
 
-    override fun getItemCount(): Int = toDoList.size
+    override fun getItemCount(): Int = currentList.size
 
-    fun setToDoList(toDoList: List<ToDoEntity>, toDoItemClickListener: (ToDoEntity) -> Unit, toDoCheckListener: (ToDoEntity) -> Unit) {
-        this.toDoList = toDoList
+    fun setToDoListener(toDoItemClickListener: (ToDoEntity) -> Unit, toDoCheckListener: (ToDoEntity) -> Unit) {
+
         this.toDoItemClickListener = toDoItemClickListener
         this.toDoCheckListener = toDoCheckListener
-        notifyDataSetChanged()
-    }
 
+    }
 
     companion object {
 

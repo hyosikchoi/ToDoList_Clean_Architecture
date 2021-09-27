@@ -87,8 +87,8 @@ class MainActivity : BaseActivity<MainListViewModel>() , CoroutineScope {
         else {
             binding.emptyResultTextView.isGone = true
             binding.recyclerView.isGone = false
-            todoAdapter.setToDoList(
-                toDoList,
+            todoAdapter.submitList(toDoList)
+            todoAdapter.setToDoListener(
                 toDoItemClickListener = {
                     //TODO 추후 DetailActivity 구현
                     Toast.makeText(this , "id: ${it.id}" , Toast.LENGTH_SHORT).show()
