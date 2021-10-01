@@ -1,14 +1,20 @@
 package com.hyosik.android.clean_architecture.todolistexample.presentation
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hyosik.android.clean_architecture.todolistexample.BaseActivity
 import com.hyosik.android.clean_architecture.todolistexample.R
 import com.hyosik.android.clean_architecture.todolistexample.data.entity.ToDoEntity
 import com.hyosik.android.clean_architecture.todolistexample.databinding.ActivityMainBinding
+import com.hyosik.android.clean_architecture.todolistexample.presentation.detail.DetailActivity
+import com.hyosik.android.clean_architecture.todolistexample.presentation.detail.DetailMode
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -24,6 +30,14 @@ class MainActivity : BaseActivity<MainListViewModel>() , CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = TODO("Not yet implemented")
+
+    private val resultLauncher : ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                viewModel.fetchData()
+            }
+        }
 
     override fun observeToDoList() {
         viewModel.toDoListLiveData.observe(this) {
@@ -48,27 +62,24 @@ class MainActivity : BaseActivity<MainListViewModel>() , CoroutineScope {
         }
     }
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
     }
 
-    private fun initViews(binding: ActivityMainBinding) {
-        binding.recyclerView.layoutManager = LinearLayoutManager(this , LinearLayoutManager.VERTICAL , false)
-        binding.recyclerView.adapter = todoAdapter
+    private fun initViews(binding: ActivityMainBinding) = with(binding) {
+        recyclerView.layoutManager = LinearLayoutManager(this@MainActivity , LinearLayoutManager.VERTICAL , false)
+        recyclerView.adapter = todoAdapter
 
-        binding.refreshLayout.setOnRefreshListener {
+        refreshLayout.setOnRefreshListener {
             viewModel.fetchData()
         }
 
-        //TODO DetailActivity 로 이동
+        // DetailActivity 로 이동
         addToDoButton.setOnClickListener {
-            Toast.makeText(this , "추후 detail 이동 구현" , Toast.LENGTH_SHORT).show()
+            resultLauncher.launch(DetailActivity.getIntent(this@MainActivity , DetailMode.WRITE))
         }
     }
 

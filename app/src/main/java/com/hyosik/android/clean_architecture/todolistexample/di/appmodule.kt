@@ -6,9 +6,12 @@ import com.hyosik.android.clean_architecture.todolistexample.data.local.ToDoDao
 import com.hyosik.android.clean_architecture.todolistexample.data.local.ToDoDatabase
 import com.hyosik.android.clean_architecture.todolistexample.data.repository.DefaultToDoRepository
 import com.hyosik.android.clean_architecture.todolistexample.data.repository.ToDoRepository
+import com.hyosik.android.clean_architecture.todolistexample.domain.GetToDoItemUseCase
 import com.hyosik.android.clean_architecture.todolistexample.domain.GetToDoListUseCase
 import com.hyosik.android.clean_architecture.todolistexample.domain.InsertToDoItemUseCase
 import com.hyosik.android.clean_architecture.todolistexample.presentation.MainListViewModel
+import com.hyosik.android.clean_architecture.todolistexample.presentation.detail.DetailMode
+import com.hyosik.android.clean_architecture.todolistexample.presentation.detail.DetailViewModel
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.viewmodel.dsl.viewModel
@@ -36,7 +39,14 @@ internal val appModule = module {
     //UseCase
     factory { GetToDoListUseCase(get())}
     factory { InsertToDoItemUseCase(get())}
+    factory { GetToDoItemUseCase(get()) }
 
     //ViewModel
     viewModel { MainListViewModel(get())}
+    viewModel { (detailMode : DetailMode, id : Long) -> DetailViewModel(
+        detailMode = detailMode,
+        id = id,
+        get(),
+        get()
+    )}
 }

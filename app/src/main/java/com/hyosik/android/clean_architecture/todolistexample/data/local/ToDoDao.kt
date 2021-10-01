@@ -11,6 +11,9 @@ interface ToDoDao {
     @Query("Select * from ToDoEntity")
     suspend fun getAll() : List<ToDoEntity>
 
+    @Query("Select * from ToDoEntity where id = :id")
+    suspend fun getToDoItem(id : Long) : ToDoEntity
+
     @Insert
     suspend fun insertToDoItem(toDoEntity: ToDoEntity) : Long
 
