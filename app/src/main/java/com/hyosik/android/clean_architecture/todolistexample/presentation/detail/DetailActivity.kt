@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.core.view.isGone
 import com.hyosik.android.clean_architecture.todolistexample.BaseActivity
 import com.hyosik.android.clean_architecture.todolistexample.databinding.ActivityDetailBinding
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -29,7 +30,7 @@ class DetailActivity  : BaseActivity<DetailViewModel>(){
                 }
 
                 is ToDoDetailState.Loading -> {
-
+                    handleLoading()
                 }
 
                 is ToDoDetailState.Success -> {
@@ -65,11 +66,38 @@ class DetailActivity  : BaseActivity<DetailViewModel>(){
     }
 
     private fun initViews() = with(binding) {
-        testInitTextView.text = "Uninitialized"
+        titleInput.isEnabled = false
+        descriptionInput.isEnabled = false
+
+        deleteButton.isGone = true
+        modifyButton.isGone = true
+        updateButton.isGone = true
+
+        deleteButton.setOnClickListener {
+            //todo 추후 삭제 구현
+        }
+        modifyButton.setOnClickListener {
+            //todo 추후 수정 구현
+        }
+        updateButton.setOnClickListener {
+            //todo 추후 저장 구현
+        }
+
+    }
+
+    private fun handleLoading() = with(binding) {
+        progrressBar.isGone = false
+
+
     }
 
     private fun handleWrite() = with(binding) {
-        testInitTextView.text = "Write"
+
+        titleInput.isEnabled = true
+        descriptionInput.isEnabled = true
+
+        updateButton.isGone = false
+
     }
 
     companion object {
