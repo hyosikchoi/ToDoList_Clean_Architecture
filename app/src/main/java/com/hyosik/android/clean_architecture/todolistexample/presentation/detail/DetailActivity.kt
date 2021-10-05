@@ -1,5 +1,6 @@
 package com.hyosik.android.clean_architecture.todolistexample.presentation.detail
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -34,7 +35,7 @@ class DetailActivity  : BaseActivity<DetailViewModel>(){
                 }
 
                 is ToDoDetailState.Success -> {
-
+                    handleSuccess(toDoDetailState)
                 }
 
                 is ToDoDetailState.Write -> {
@@ -62,6 +63,7 @@ class DetailActivity  : BaseActivity<DetailViewModel>(){
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setResult(Activity.RESULT_OK)
 
     }
 
@@ -80,7 +82,7 @@ class DetailActivity  : BaseActivity<DetailViewModel>(){
             //todo 추후 수정 구현
         }
         updateButton.setOnClickListener {
-            //todo 추후 저장 구현
+            viewModel.insertToDo(title = titleInput.text.toString() , description = descriptionInput.text.toString())
         }
 
     }
@@ -97,6 +99,21 @@ class DetailActivity  : BaseActivity<DetailViewModel>(){
         descriptionInput.isEnabled = true
 
         updateButton.isGone = false
+
+    }
+
+    private fun handleSuccess(toDoDetailState: ToDoDetailState.Success) = with(binding) {
+        progrressBar.isGone = true
+
+        titleInput.isEnabled = false
+        descriptionInput.isEnabled = false
+
+        deleteButton.isGone = false
+        modifyButton.isGone = false
+        updateButton.isGone = true
+
+        titleInput.setText(toDoDetailState.toDoItem.title)
+        descriptionInput.setText(toDoDetailState.toDoItem.description)
 
     }
 
