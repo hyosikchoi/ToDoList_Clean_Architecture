@@ -8,6 +8,7 @@ import com.hyosik.android.clean_architecture.todolistexample.data.entity.ToDoEnt
 import com.hyosik.android.clean_architecture.todolistexample.domain.DeleteToDoItemUseCase
 import com.hyosik.android.clean_architecture.todolistexample.domain.GetToDoItemUseCase
 import com.hyosik.android.clean_architecture.todolistexample.domain.InsertToDoItemUseCase
+import com.hyosik.android.clean_architecture.todolistexample.domain.UpdateToDoItemUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -17,7 +18,8 @@ class DetailViewModel(
    var id : Long = -1 ,
    private val getToDoItemUseCase : GetToDoItemUseCase,
    private val insertToDoItemUseCase: InsertToDoItemUseCase,
-   private val deleteToDoItemUseCase : DeleteToDoItemUseCase
+   private val deleteToDoItemUseCase : DeleteToDoItemUseCase,
+   private val updateToDoItemUseCase: UpdateToDoItemUseCase
 ) : BaseViewModel() {
 
     var _toDoDetailLiveData  =  MutableLiveData<ToDoDetailState>(ToDoDetailState.UnInitialized)
@@ -58,7 +60,26 @@ class DetailViewModel(
         when(detailMode) {
 
             DetailMode.DETAIL -> {
-                // TODO update 관련은 추후 구현
+
+                try {
+                    /** 업데이트 관련 */
+                    getToDoItemUseCase(id)?.let {
+                        val toDoEntity = it.copy(
+                            title = title,
+                            description = description
+                        )
+                        updateToDoItemUseCase(toDoEntity = toDoEntity)
+                        _toDoDetailLiveData.postValue(ToDoDetailState.Success(toDoItem = toDoEntity))
+                    } ?: kotlin.run {
+                        _toDoDetailLiveData.postValue(ToDoDetailState.Error)
+                    }
+                }
+                catch (e : Exception) {
+                    e.printStackTrace()
+                    _toDoDetailLiveData.postValue(ToDoDetailState.Error)
+                }
+
+
             }
 
             DetailMode.WRITE -> {
@@ -69,6 +90,7 @@ class DetailViewModel(
                     )
                    id = insertToDoItemUseCase(toDoEntity = toDoEntity)
                    _toDoDetailLiveData.postValue(ToDoDetailState.Success(toDoEntity))
+                   /** 첫 insert 이후 detail 로 바꿔서 추후부턴 업데이트로 되게끔 한다. */
                    detailMode = DetailMode.DETAIL
                 }
 
@@ -93,5 +115,8 @@ class DetailViewModel(
         }
     }
 
+    fun setModifyToDoDetail() = viewModelScope.launch {
+        _toDoDetailLiveData.postValue(ToDoDetailState.Modify)
+    }
 
 }

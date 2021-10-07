@@ -44,7 +44,7 @@ class DetailActivity  : BaseActivity<DetailViewModel>(){
                 }
 
                 is ToDoDetailState.Modify -> {
-
+                    handleModify()
                 }
 
                 is ToDoDetailState.Delete -> {
@@ -81,7 +81,7 @@ class DetailActivity  : BaseActivity<DetailViewModel>(){
             viewModel.deleteToDo()
         }
         modifyButton.setOnClickListener {
-            //todo 추후 수정 구현
+            viewModel.setModifyToDoDetail()
         }
         updateButton.setOnClickListener {
             viewModel.insertToDo(title = titleInput.text.toString() , description = descriptionInput.text.toString())
@@ -97,6 +97,17 @@ class DetailActivity  : BaseActivity<DetailViewModel>(){
 
         titleInput.isEnabled = true
         descriptionInput.isEnabled = true
+
+        updateButton.isGone = false
+
+    }
+
+    private fun handleModify() = with(binding) {
+        titleInput.isEnabled = true
+        descriptionInput.isEnabled = true
+
+        deleteButton.isGone = true
+        modifyButton.isGone = true
 
         updateButton.isGone = false
 

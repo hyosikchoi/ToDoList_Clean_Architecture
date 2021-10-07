@@ -26,4 +26,8 @@ class DefaultToDoRepository(
         toDoDao.deleteToDoItem(itemId)
     }
 
+    override suspend fun updateToDoItem(toDoEntity: ToDoEntity) {
+        toDoDao.updateToDoItem(toDoEntity = toDoEntity)
+    }
+
 }
