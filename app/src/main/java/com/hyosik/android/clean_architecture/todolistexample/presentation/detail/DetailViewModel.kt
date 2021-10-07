@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.hyosik.android.clean_architecture.todolistexample.BaseViewModel
 import com.hyosik.android.clean_architecture.todolistexample.data.entity.ToDoEntity
+import com.hyosik.android.clean_architecture.todolistexample.domain.DeleteToDoItemUseCase
 import com.hyosik.android.clean_architecture.todolistexample.domain.GetToDoItemUseCase
 import com.hyosik.android.clean_architecture.todolistexample.domain.InsertToDoItemUseCase
 import kotlinx.coroutines.Job
@@ -15,7 +16,8 @@ class DetailViewModel(
    var detailMode : DetailMode,
    var id : Long = -1 ,
    private val getToDoItemUseCase : GetToDoItemUseCase,
-   private val insertToDoItemUseCase: InsertToDoItemUseCase
+   private val insertToDoItemUseCase: InsertToDoItemUseCase,
+   private val deleteToDoItemUseCase : DeleteToDoItemUseCase
 ) : BaseViewModel() {
 
     var _toDoDetailLiveData  =  MutableLiveData<ToDoDetailState>(ToDoDetailState.UnInitialized)
@@ -79,5 +81,17 @@ class DetailViewModel(
 
 
     }
+
+    fun deleteToDo() = viewModelScope.launch {
+        _toDoDetailLiveData.postValue(ToDoDetailState.Loading)
+        try {
+            deleteToDoItemUseCase(id)
+            _toDoDetailLiveData.postValue(ToDoDetailState.Delete)
+        }
+        catch (e : Exception) {
+            _toDoDetailLiveData.postValue(ToDoDetailState.Error)
+        }
+    }
+
 
 }

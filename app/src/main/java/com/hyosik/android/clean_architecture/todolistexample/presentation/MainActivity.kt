@@ -13,6 +13,7 @@ import com.hyosik.android.clean_architecture.todolistexample.BaseActivity
 import com.hyosik.android.clean_architecture.todolistexample.R
 import com.hyosik.android.clean_architecture.todolistexample.data.entity.ToDoEntity
 import com.hyosik.android.clean_architecture.todolistexample.databinding.ActivityMainBinding
+import com.hyosik.android.clean_architecture.todolistexample.extension.toast
 import com.hyosik.android.clean_architecture.todolistexample.presentation.detail.DetailActivity
 import com.hyosik.android.clean_architecture.todolistexample.presentation.detail.DetailMode
 import kotlinx.android.synthetic.main.activity_main.*
@@ -69,6 +70,9 @@ class MainActivity : BaseActivity<MainListViewModel>() , CoroutineScope {
 
     }
 
+
+
+
     private fun initViews(binding: ActivityMainBinding) = with(binding) {
         recyclerView.layoutManager = LinearLayoutManager(this@MainActivity , LinearLayoutManager.VERTICAL , false)
         recyclerView.adapter = todoAdapter
@@ -101,12 +105,11 @@ class MainActivity : BaseActivity<MainListViewModel>() , CoroutineScope {
             todoAdapter.submitList(toDoList)
             todoAdapter.setToDoListener(
                 toDoItemClickListener = {
-                    //TODO 추후 DetailActivity 구현
-                    Toast.makeText(this , "id: ${it.id}" , Toast.LENGTH_SHORT).show()
+                    resultLauncher.launch(DetailActivity.getIntent(this , DetailMode.DETAIL , it.id))
                 },
                 toDoCheckListener = {
                     //Todo 추후 update hasCompleted 구현
-                    Toast.makeText(this , "hasCompleted : ${it.hasCompleted}" , Toast.LENGTH_SHORT).show()
+                    toast("hasCompleted : ${it.hasCompleted}")
                 }
             )
         }
@@ -114,7 +117,7 @@ class MainActivity : BaseActivity<MainListViewModel>() , CoroutineScope {
     }
 
     private fun handleError() {
-        Toast.makeText(this , "에러가 발생했습니다." , Toast.LENGTH_SHORT).show()
+        toast("에러가 발생했습니다.")
     }
 
 }

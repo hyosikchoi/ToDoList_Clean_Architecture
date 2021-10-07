@@ -17,4 +17,7 @@ interface ToDoDao {
     @Insert
     suspend fun insertToDoItem(toDoEntity: ToDoEntity) : Long
 
+    @Query("DELETE FROM ToDoEntity where id = :id")
+    suspend fun deleteToDoItem(id: Long)
+
 }

@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.core.view.isGone
 import com.hyosik.android.clean_architecture.todolistexample.BaseActivity
 import com.hyosik.android.clean_architecture.todolistexample.databinding.ActivityDetailBinding
+import com.hyosik.android.clean_architecture.todolistexample.extension.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -47,11 +48,12 @@ class DetailActivity  : BaseActivity<DetailViewModel>(){
                 }
 
                 is ToDoDetailState.Delete -> {
-
+                    toast("성공적으로 삭제되었습니다.")
+                    finish()
                 }
 
                 is ToDoDetailState.Error -> {
-                    Toast.makeText(this , "예기치 못한 에러가 발생했습니다." , Toast.LENGTH_SHORT).show()
+                    toast("예기치 못한 에러가 발생했습니다.")
                     finish()
                 }
 
@@ -76,7 +78,7 @@ class DetailActivity  : BaseActivity<DetailViewModel>(){
         updateButton.isGone = true
 
         deleteButton.setOnClickListener {
-            //todo 추후 삭제 구현
+            viewModel.deleteToDo()
         }
         modifyButton.setOnClickListener {
             //todo 추후 수정 구현
@@ -89,8 +91,6 @@ class DetailActivity  : BaseActivity<DetailViewModel>(){
 
     private fun handleLoading() = with(binding) {
         progrressBar.isGone = false
-
-
     }
 
     private fun handleWrite() = with(binding) {

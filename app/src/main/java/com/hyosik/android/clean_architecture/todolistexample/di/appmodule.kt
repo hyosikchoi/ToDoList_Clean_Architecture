@@ -6,6 +6,7 @@ import com.hyosik.android.clean_architecture.todolistexample.data.local.ToDoDao
 import com.hyosik.android.clean_architecture.todolistexample.data.local.ToDoDatabase
 import com.hyosik.android.clean_architecture.todolistexample.data.repository.DefaultToDoRepository
 import com.hyosik.android.clean_architecture.todolistexample.data.repository.ToDoRepository
+import com.hyosik.android.clean_architecture.todolistexample.domain.DeleteToDoItemUseCase
 import com.hyosik.android.clean_architecture.todolistexample.domain.GetToDoItemUseCase
 import com.hyosik.android.clean_architecture.todolistexample.domain.GetToDoListUseCase
 import com.hyosik.android.clean_architecture.todolistexample.domain.InsertToDoItemUseCase
@@ -40,12 +41,14 @@ internal val appModule = module {
     factory { GetToDoListUseCase(get())}
     factory { InsertToDoItemUseCase(get())}
     factory { GetToDoItemUseCase(get()) }
+    factory { DeleteToDoItemUseCase(get()) }
 
     //ViewModel
     viewModel { MainListViewModel(get())}
     viewModel { (detailMode : DetailMode, id : Long) -> DetailViewModel(
         detailMode = detailMode,
         id = id,
+        get(),
         get(),
         get()
     )}
