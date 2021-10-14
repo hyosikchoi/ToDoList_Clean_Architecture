@@ -45,7 +45,7 @@ class ToDoAdapter : ListAdapter<ToDoEntity , ToDoAdapter.ToDoItemViewHolder>(dif
                 ContextCompat.getColor(
                     root.context,
                     if (isChecked) {
-                        R.color.gray_300
+                        R.color.lightpurple
                     } else {
                         R.color.white
                     }
