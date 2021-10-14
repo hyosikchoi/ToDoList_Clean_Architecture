@@ -40,9 +40,10 @@ internal val appModule = module {
     factory { GetToDoItemUseCase(get()) }
     factory { DeleteToDoItemUseCase(get()) }
     factory { UpdateToDoItemUseCase(get()) }
+    factory { DeleteToDoListUseCase(get()) }
 
     //ViewModel
-    viewModel { MainListViewModel(get())}
+    viewModel { MainListViewModel(get() , get() , get())}
     viewModel { (detailMode : DetailMode, id : Long) -> DetailViewModel(
         detailMode = detailMode,
         id = id,

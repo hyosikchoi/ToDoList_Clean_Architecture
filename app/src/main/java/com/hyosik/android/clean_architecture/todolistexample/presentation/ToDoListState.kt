@@ -14,6 +14,10 @@ sealed class ToDoListState {
 
     object Error : ToDoListState()
 
+    data class Delete(
+        val toDoEmptyList : List<ToDoEntity>
+    ) : ToDoListState()
+
 }
 
 

@@ -55,6 +55,11 @@ class MainActivity : BaseActivity<MainListViewModel>() , CoroutineScope {
                is ToDoListState.Success -> {
                     handleSuccess(it.toDoList)
                 }
+
+               is ToDoListState.Delete -> {
+                   handleDeleteAll(it.toDoEmptyList)
+               }
+
                is ToDoListState.Error -> {
                    handleError()
                }
@@ -70,9 +75,6 @@ class MainActivity : BaseActivity<MainListViewModel>() , CoroutineScope {
 
     }
 
-
-
-
     private fun initViews(binding: ActivityMainBinding) = with(binding) {
         recyclerView.layoutManager = LinearLayoutManager(this@MainActivity , LinearLayoutManager.VERTICAL , false)
         recyclerView.adapter = todoAdapter
@@ -85,6 +87,12 @@ class MainActivity : BaseActivity<MainListViewModel>() , CoroutineScope {
         addToDoButton.setOnClickListener {
             resultLauncher.launch(DetailActivity.getIntent(this@MainActivity , DetailMode.WRITE))
         }
+
+        // 전체 삭제 버튼
+        deleteAllButton.setOnClickListener {
+            viewModel.deleteAll()
+        }
+
     }
 
     private fun handleLoading() {
@@ -108,10 +116,26 @@ class MainActivity : BaseActivity<MainListViewModel>() , CoroutineScope {
                     resultLauncher.launch(DetailActivity.getIntent(this , DetailMode.DETAIL , it.id))
                 },
                 toDoCheckListener = {
-                    //Todo 추후 update hasCompleted 구현
-                    toast("hasCompleted : ${it.hasCompleted}")
+                    //toast("hasCompleted : ${it.hasCompleted}")
+                    viewModel.updateToDo(toDoEntity = it)
                 }
             )
+        }
+
+    }
+
+    private fun handleDeleteAll(toDoList: List<ToDoEntity>) = with(binding) {
+        refreshLayout.isRefreshing = false
+        refreshLayout.isEnabled = toDoList.isNotEmpty()
+
+        if(toDoList.isEmpty()) {
+            binding.emptyResultTextView.isGone = false
+            binding.recyclerView.isGone = true
+            toast("삭제되었습니다.")
+        }
+
+        else {
+            toast("삭제에 실패했습니다.")
         }
 
     }

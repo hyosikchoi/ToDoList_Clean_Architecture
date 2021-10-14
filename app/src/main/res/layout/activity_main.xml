@@ -37,11 +37,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="96dp"
         android:contentDescription="addToDoButton"
         android:src="@drawable/ic_plus"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:backgroundTint="@color/black"
         app:tint="@color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/deleteAllButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@id/addToDoButton"
+        app:layout_constraintTop_toBottomOf="@id/addToDoButton"
+        app:layout_constraintStart_toStartOf="@id/addToDoButton"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/ic_delete"
+        android:backgroundTint="@color/black"
+        android:tint="@color/white"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
